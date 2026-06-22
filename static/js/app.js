@@ -18,6 +18,8 @@ const elements = {
     btnRefresh: document.getElementById('btn-refresh'),
     spinnerIcon: document.getElementById('spinner-icon'),
     cacheIndicator: document.getElementById('cache-indicator'),
+    btnExportCSV: document.getElementById('btn-export-csv'),
+    themeToggle: document.getElementById('theme-toggle'),
     
     // Stats
     statDays: document.getElementById('stat-days'),
@@ -52,6 +54,20 @@ const elements = {
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
+    // Load theme preference
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        if (elements.themeToggle) {
+            elements.themeToggle.checked = true;
+        }
+    } else {
+        document.body.classList.remove('light-mode');
+        if (elements.themeToggle) {
+            elements.themeToggle.checked = false;
+        }
+    }
+    
     setupEventListeners();
     fetchNotes(false);
 });
@@ -62,6 +78,16 @@ function setupEventListeners() {
     elements.btnRefresh.addEventListener('click', () => {
         fetchNotes(true);
     });
+    
+    // Export CSV action
+    if (elements.btnExportCSV) {
+        elements.btnExportCSV.addEventListener('click', exportToCSV);
+    }
+    
+    // Theme toggle action
+    if (elements.themeToggle) {
+        elements.themeToggle.addEventListener('change', toggleTheme);
+    }
     
     // Reset filters empty state button
     elements.btnResetFilters.addEventListener('click', resetFilters);
@@ -277,6 +303,9 @@ function renderNotes() {
                     <div class="update-meta-row">
                         <span class="category-tag ${catClass}">${update.category}</span>
                         <div class="update-actions">
+                            <button class="btn-copy-action" onclick="copyToClipboard(${dayIdx}, ${uIdx}, this)">
+                                <i class="fa-solid fa-copy"></i> Copy
+                            </button>
                             <button class="btn-tweet-action" onclick="prepareTweet(${dayIdx}, ${uIdx})">
                                 <i class="fa-brands fa-x-twitter"></i> Tweet
                             </button>
@@ -430,3 +459,91 @@ function submitTweet() {
     closeTweetModal();
     showToast("Opening X/Twitter to publish draft...");
 }
+
+// Toggle Light/Dark Mode Color Scheme
+function toggleTheme(e) {
+    if (e.target.checked) {
+        document.body.classList.add('light-mode');
+        localStorage.setItem('theme', 'light');
+        showToast("Switched to Light Mode");
+    } else {
+        document.body.classList.remove('light-mode');
+        localStorage.setItem('theme', 'dark');
+        showToast("Switched to Dark Mode");
+    }
+}
+
+// Copy specific update card details to clipboard
+window.copyToClipboard = function(dayIdx, uIdx, buttonEl) {
+    const note = appState.filteredNotes[dayIdx];
+    const update = note.updates[uIdx];
+    
+    // Format copied text nicely
+    const copyText = `BigQuery Update (${note.date}) - [${update.category}]:\n${update.text}\n\nRef: ${note.link}`;
+    
+    navigator.clipboard.writeText(copyText).then(() => {
+        // Toggle button visual state
+        const originalHTML = buttonEl.innerHTML;
+        buttonEl.innerHTML = '<i class="fa-solid fa-check" style="color: #2dd4bf;"></i> Copied!';
+        buttonEl.classList.add('copied');
+        
+        showToast("Copied to clipboard!");
+        
+        setTimeout(() => {
+            buttonEl.innerHTML = originalHTML;
+            buttonEl.classList.remove('copied');
+        }, 2000);
+    }).catch(err => {
+        console.error("Clipboard copy failed:", err);
+        showToast("Copy failed. Try manually.");
+    });
+};
+
+// Export currently filtered list of release notes to CSV
+function exportToCSV() {
+    if (appState.filteredNotes.length === 0) {
+        showToast("No data to export");
+        return;
+    }
+    
+    // Define CSV headers
+    const headers = ["Date", "Category", "Update Text", "Reference Link"];
+    
+    // Compile data rows
+    const rows = [];
+    appState.filteredNotes.forEach(note => {
+        note.updates.forEach(update => {
+            const cleanDate = note.date.replace(/"/g, '""');
+            const cleanCategory = update.category.replace(/"/g, '""');
+            const cleanText = update.text.replace(/"/g, '""');
+            const cleanLink = note.link.replace(/"/g, '""');
+            
+            rows.push([
+                `"${cleanDate}"`,
+                `"${cleanCategory}"`,
+                `"${cleanText}"`,
+                `"${cleanLink}"`
+            ]);
+        });
+    });
+    
+    // Create CSV content starting with BOM for proper Excel UTF-8 representation
+    const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+    
+    // Trigger file download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    
+    const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '_');
+    link.setAttribute("href", url);
+    link.setAttribute("download", `bigquery_release_notes_export_${timestamp}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showToast("CSV export complete!");
+}
+

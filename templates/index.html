@@ -42,6 +42,23 @@
                     <div id="cache-indicator" class="cache-badge" title="Data loaded from local cache">
                         <i class="fa-solid fa-clock-rotate-left"></i> Cached
                     </div>
+                    
+                    <!-- Theme Toggle Switch -->
+                    <div class="theme-switch-wrapper" title="Toggle Light/Dark Theme">
+                        <i class="fa-solid fa-moon theme-icon-dark"></i>
+                        <label class="theme-switch" for="theme-toggle">
+                            <input type="checkbox" id="theme-toggle" />
+                            <span class="slider round"></span>
+                        </label>
+                        <i class="fa-solid fa-sun theme-icon-light"></i>
+                    </div>
+                    
+                    <!-- Export to CSV Button -->
+                    <button id="btn-export-csv" class="btn btn-secondary" title="Export current view to CSV">
+                        <i class="fa-solid fa-file-csv"></i>
+                        <span>Export CSV</span>
+                    </button>
+                    
                     <button id="btn-refresh" class="btn btn-primary" title="Refresh Release Notes">
                         <i id="spinner-icon" class="fa-solid fa-rotate"></i>
                         <span>Refresh</span>

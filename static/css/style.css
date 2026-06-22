@@ -1003,6 +1003,8 @@ body {
     .action-area {
         width: 100%;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
     }
     
     .logo-area {
@@ -1029,3 +1031,281 @@ body {
         gap: 0.5rem;
     }
 }
+
+/* Theme Toggle CSS */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 0.4rem 0.75rem;
+    border-radius: 12px;
+    height: 38px;
+}
+
+.theme-icon-dark {
+    color: #fbbf24; /* Golden glow for active dark mode moon */
+    font-size: 0.85rem;
+    transition: color 0.3s ease;
+}
+
+.theme-icon-light {
+    color: #475569;
+    font-size: 0.85rem;
+    transition: color 0.3s ease;
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 18px;
+    position: relative;
+    width: 32px;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+.slider {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .3s;
+}
+
+.slider:before {
+    background-color: #fff;
+    bottom: 2px;
+    content: "";
+    height: 12px;
+    left: 2px;
+    position: absolute;
+    transition: .3s;
+    width: 12px;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+    border-color: transparent;
+}
+
+input:checked + .slider:before {
+    transform: translateX(14px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Copy Button CSS */
+.btn-copy-action {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.75rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.25s ease;
+    margin-right: 0.5rem;
+}
+
+.btn-copy-action:hover {
+    color: #2dd4bf;
+    background: rgba(45, 212, 191, 0.1);
+    border-color: rgba(45, 212, 191, 0.3);
+}
+
+.btn-copy-action.copied {
+    border-color: #2dd4bf;
+    background: rgba(45, 212, 191, 0.08);
+}
+
+/* Light Mode Styling Overrides */
+body.light-mode {
+    --bg-dark: #f8fafc;
+    --bg-surface: rgba(255, 255, 255, 0.75);
+    --border-color: rgba(15, 23, 42, 0.08);
+    
+    --primary: #4f46e5;
+    --primary-glow: rgba(79, 70, 229, 0.1);
+    --accent: #8b5cf6;
+    
+    --text-main: #0f172a;
+    --text-muted: #334155;
+    --text-dark: #64748b;
+    
+    --shadow-soft: 0 10px 30px 0 rgba(15, 23, 42, 0.06);
+    --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.15);
+    
+    /* Category Color Overrides for Light Mode (increase contrast) */
+    --color-feature: #4338ca;
+    --color-feature-bg: rgba(67, 56, 202, 0.08);
+    --color-feature-border: rgba(67, 56, 202, 0.2);
+    
+    --color-announcement: #0f766e;
+    --color-announcement-bg: rgba(15, 118, 110, 0.08);
+    --color-announcement-border: rgba(15, 118, 110, 0.2);
+    
+    --color-issue: #b45309;
+    --color-issue-bg: rgba(180, 83, 9, 0.08);
+    --color-issue-border: rgba(180, 83, 9, 0.2);
+    
+    --color-change: #1d4ed8;
+    --color-change-bg: rgba(29, 78, 216, 0.08);
+    --color-change-border: rgba(29, 78, 216, 0.2);
+    
+    --color-deprecation: #b91c1c;
+    --color-deprecation-bg: rgba(185, 28, 28, 0.08);
+    --color-deprecation-border: rgba(185, 28, 28, 0.2);
+    
+    --color-general: #475569;
+    --color-general-bg: rgba(71, 85, 105, 0.08);
+    --color-general-border: rgba(71, 85, 105, 0.2);
+}
+
+body.light-mode .glow-orb {
+    opacity: 0.06;
+}
+
+body.light-mode .theme-switch-wrapper {
+    background: rgba(15, 23, 42, 0.03);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+body.light-mode .theme-icon-dark {
+    color: #94a3b8;
+}
+
+body.light-mode .theme-icon-light {
+    color: #f59e0b; /* Sun glow for active light mode sun */
+}
+
+body.light-mode #search-input {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(15, 23, 42, 0.12);
+    color: #0f172a;
+}
+
+body.light-mode #search-input:focus {
+    background: #ffffff;
+    border-color: var(--primary);
+}
+
+body.light-mode .update-block {
+    background: rgba(255, 255, 255, 0.4);
+    border-color: rgba(15, 23, 42, 0.04);
+}
+
+body.light-mode .update-block:hover {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+body.light-mode .btn-secondary {
+    background: rgba(15, 23, 42, 0.04);
+    border-color: rgba(15, 23, 42, 0.08);
+    color: #334155;
+}
+
+body.light-mode .btn-secondary:hover {
+    background: rgba(15, 23, 42, 0.08);
+    border-color: rgba(15, 23, 42, 0.15);
+}
+
+body.light-mode .btn-tweet-action {
+    background: rgba(15, 23, 42, 0.03);
+    border-color: rgba(15, 23, 42, 0.06);
+    color: #475569;
+}
+
+body.light-mode .btn-copy-action {
+    background: rgba(15, 23, 42, 0.03);
+    border-color: rgba(15, 23, 42, 0.06);
+    color: #475569;
+}
+
+body.light-mode .btn-copy-action:hover {
+    background: rgba(99, 102, 241, 0.08);
+    border-color: rgba(99, 102, 241, 0.2);
+    color: var(--primary);
+}
+
+body.light-mode .btn-copy-action.copied {
+    border-color: #2dd4bf;
+    background: rgba(45, 212, 191, 0.08);
+    color: #0f766e;
+}
+
+body.light-mode .stat-card {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+body.light-mode .update-desc code {
+    background: rgba(15, 23, 42, 0.05);
+    color: #0f172a;
+    border-color: rgba(15, 23, 42, 0.03);
+}
+
+body.light-mode .note-original-link {
+    background: rgba(15, 23, 42, 0.02);
+    border-color: rgba(15, 23, 42, 0.04);
+}
+
+body.light-mode .note-original-link:hover {
+    background: rgba(15, 23, 42, 0.06);
+    color: #0f172a;
+}
+
+body.light-mode .modal-card {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.1);
+}
+
+body.light-mode .modal-header h3 {
+    color: #0f172a;
+}
+
+body.light-mode .modal-header h3 i {
+    color: #000000;
+}
+
+body.light-mode .tweet-composer-box {
+    background: rgba(15, 23, 42, 0.02);
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+body.light-mode #tweet-textarea {
+    color: #0f172a;
+}
+
+body.light-mode .composer-meta {
+    border-top-color: rgba(15, 23, 42, 0.05);
+}
+
+body.light-mode .tweet-preview {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.1);
+}
+
+body.light-mode .display-name {
+    color: #0f172a;
+}
+
+body.light-mode .tweet-preview-content {
+    color: #334155;
+}
+
